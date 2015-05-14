@@ -4,13 +4,13 @@
 	this.store = store;
 	this.revise = {
 	    method: 'POST',
-	    path: '/nuget/{component}/{action}',
+	    path: '/nuget/{hash}/{component}/{action}',
 	    handler: this.revision.bind(this)
 	};
 
 	this.create = {
 	    method: 'PUT',
-	    path: '/nuget/{component}/{type}/{major}/{minor}/{patch}',
+	    path: '/nuget/{hash}/{component}/{type}/{major}/{minor}/{patch}',
 	    handler: this.creation.bind(this)
 	};
     }
@@ -52,6 +52,7 @@
 
     Nuget.prototype.revision = function (request, reply) {
 	var componentName  = request.params.component,
+            hash           = request.params.hash,
 	    fn             = (this[request.params.action] || function (x) { return x; }),
             store          = this.store;
 
@@ -63,7 +64,7 @@
 
             var next = fn(res.value.version);
 
-            store.set(componentName, res.value.type, next, function (err, res) {
+            store.set(componentName, hash, res.value.type, next, function (err, res) {
                 reply(err || res);
             });
 	});
@@ -75,6 +76,7 @@
 	    minor = request.params.minor,
 	    patch = request.params.patch,
             type  = request.params.type,
+            hash  = request.params.hash,
             store = this.store;
 
 	store.get(componentName, function (err, res) {
@@ -88,7 +90,7 @@
                 return;
             }
 
-	    store.set(componentName, type, version(major, minor, patch), function (err, res) {
+	    store.set(componentName, hash, type, version(major, minor, patch), function (err, res) {
                 reply(err || res);
             });
 	});

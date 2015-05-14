@@ -17,7 +17,7 @@
             get: function (name, callback) {
                 return callback(null, name === component ? { value: { version: version } } : null);
             },
-            set: function (name, type, version, callback) {
+            set: function (name, hash, type, version, callback) {
                 callback(null, version);
             }
         })

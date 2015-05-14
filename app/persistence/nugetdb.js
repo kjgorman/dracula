@@ -8,10 +8,11 @@
         this.base.getVersion.apply(this, arguments);
     };
 
-    NugetStore.prototype.set = function set (name, type, version, cb) {
+    NugetStore.prototype.set = function set (name, hash, type, version, cb) {
         var newVersion = {
             component: name,
             version: version,
+            hash: hash,
             type: type,
             timestamp: Date.now()
         };
