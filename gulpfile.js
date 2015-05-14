@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
-    mocha = require('gulp-mocha');
+    mocha = require('gulp-mocha'),
+    jshint = require('gulp-jshint');
 
 var paths = {
     tests: 'test/**/*.js',
@@ -16,6 +17,12 @@ gulp.task('watch', function () {
     // or test file
     gulp.watch(paths.tests, ['tests']);
     gulp.watch(paths.src, ['tests']);
+});
+
+gulp.task('lint', function() {
+    return gulp.src('./app/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
 gulp.task('default', ['watch']);

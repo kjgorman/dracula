@@ -13,7 +13,7 @@
                 if (err) cb(err);
 
                 cb(null, res.sort(function (a, b) {
-                    return a.value.timestamp < b.value.timestamp
+                    return a.value.timestamp < b.value.timestamp;
                 })[0]);
             });
         },
@@ -23,14 +23,14 @@
                 version: version,
                 type: type,
                 timestamp: Date.now()
-            }
+            };
 
             open().save(newVersion, function (err, res) {
                 if (err) cb(err);
                 else cb(null, res);
             });
         }
-    }
+    };
 
     db.save('_design/versions', {
         all: {

@@ -18,10 +18,10 @@
     Nuget.prototype.route = function route(server) {
 	server.route(this.revise);
 	server.route(this.create);
-    }
+    };
 
     function id    (x) { return x; }
-    function succ  (x) { return x + 1 }
+    function succ  (x) { return x + 1; }
     function reset (x) { return 0; }
 
     function version (major, minor, patch) {
@@ -35,20 +35,20 @@
 		minor(current.minor),
 		patch(current.patch)
 	    );
-	}
+	};
     }
 
     Nuget.prototype.bugfix = function (current) {
 	return transform(current)(id, id, succ);
-    }
+    };
 
     Nuget.prototype.addition = function (current) {
 	return transform(current)(id, succ, reset);
-    }
+    };
 
     Nuget.prototype.breaking = function (current) {
 	return transform(current)(succ, reset, reset);
-    }
+    };
 
     Nuget.prototype.revision = function (request, reply) {
 	var componentName  = request.params.component,
@@ -61,13 +61,13 @@
 		return;
 	    }
 
-            var next = fn(res.value.version)
+            var next = fn(res.value.version);
 
             store.set(componentName, res.value.type, next, function (err, res) {
                 reply(err || res);
             });
-	})
-    }
+	});
+    };
 
     Nuget.prototype.creation = function (request, reply) {
 	var componentName = request.params.component,
@@ -82,7 +82,7 @@
 		reply(err);
 		return;
 	    }
-            console.log
+
 	    if (res != null) {
                 reply("cannot create a component that already exists", 500);
                 return;
@@ -92,8 +92,8 @@
                 reply(err || res);
             });
 	});
-    }
+    };
 
     module.exports = Nuget;
 
-}()
+}();
