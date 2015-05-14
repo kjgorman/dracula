@@ -1,12 +1,12 @@
 !function () {
 
     function handler (request, reply) {
-	reply("hello world");
+	reply('foo');
     }
 
     module.exports = {
-	method: "GET",
-	path: "/nuget",
+	method: 'POST',
+	path: '/nuget/{component}/{action}',
 	handler: handler
     }
 

@@ -6,7 +6,7 @@
     describe('basics', function () {
 	it ('should reply using the reply callback', function () {
 	    nuget(null, function (response) {
-		assert.equal(response, 'hello world');
+		assert.equal(response, 'foo');
 	    });
 	});
     });
