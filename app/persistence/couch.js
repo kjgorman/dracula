@@ -1,12 +1,14 @@
 !function () {
+    var Connection = require('cradle').Connection;
+    var NugetStore = require('./nugetdb');
+    var DeployStore = require('./deploydb');
+
     var databases = {
         versions: 'versions',
         deploys: 'deploys'
-    }
+    };
 
-
-    var Connection = require('cradle').Connection,
-        db = open(databases.versions);
+    var base = { open: open, databases: databases, getVersion: getVersion }
 
     function open (name) {
         return new Connection().database(name);
@@ -25,7 +27,7 @@
         });
     }
 
-    createIfNecessary(databases.versions, db);
+    createIfNecessary(databases.versions, open(databases.versions));
     createIfNecessary(databases.deploys, open(databases.deploys));
 
     function getVersion (name, cb) {
@@ -38,35 +40,7 @@
         });
     }
 
-    var nugetPersistence = {
-        get: getVersion,
-        set: function (name, type, version, cb) {
-            var newVersion = {
-                component: name,
-                version: version,
-                type: type,
-                timestamp: Date.now()
-            };
-
-            open(databases.versions).save(newVersion, function (err, res) {
-                if (err) cb(err);
-                else cb(null, res);
-            });
-        }
-    };
-
-    var deployPersistence = {
-        get: getVersion,
-        deploy: function (name, hash, time, cb) {
-            open(databases.deploys).save({ name: name, hash: hash, time: time }, function (err, res) {
-                if (err) { cb(err); return; }
-
-                cb(null, res);
-            });
-        }
-    };
-
-    db.save('_design/versions', {
+    open(databases.versions).save('_design/versions', {
         all: {
             map: function (doc) {
                 if (doc.component) emit(doc.component, doc);
@@ -75,8 +49,8 @@
     });
 
     module.exports = {
-        nuget: nugetPersistence,
-        deploy: deployPersistence
+        nuget: new NugetStore(base),
+        deploy: new DeployStore(base)
     };
 
 }();
