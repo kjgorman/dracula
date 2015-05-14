@@ -10,7 +10,7 @@
 
 	this.create = {
 	    method: 'PUT',
-	    path: '/nuget/{component}/{major}/{minor}/{patch}',
+	    path: '/nuget/{component}/{type}/{major}/{minor}/{patch}',
 	    handler: this.creation.bind(this)
 	};
     }
@@ -63,7 +63,7 @@
 
             var next = fn(res.value.version)
 
-            store.set(componentName, next, function (err, res) {
+            store.set(componentName, res.value.type, next, function (err, res) {
                 reply(err || res);
             });
 	})
@@ -73,19 +73,24 @@
 	var componentName = request.params.component,
 	    major = request.params.major,
 	    minor = request.params.minor,
-	    patch = request.params.patch;
+	    patch = request.params.patch,
+            type  = request.params.type,
+            store = this.store;
 
-	this.store.get(componentName, function (err, res) {
+	store.get(componentName, function (err, res) {
 	    if (err) {
 		reply(err);
 		return;
 	    }
-
+            console.log
 	    if (res != null) {
-                reply(new Error("cannot create an existing component"));
+                reply("cannot create a component that already exists", 500);
+                return;
             }
 
-	    reply(this.store.set(componentName, version(major, minor, patch)));
+	    store.set(componentName, type, version(major, minor, patch), function (err, res) {
+                reply(err || res);
+            });
 	});
     }
 

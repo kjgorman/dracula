@@ -17,18 +17,17 @@
                 })[0]);
             });
         },
-        set: function (name, version, cb) {
+        set: function (name, type, version, cb) {
             this.get(name, function (err, res) {
                 if (err) { cb(err); return; }
 
                 var newVersion = {
-                    component: res.value.component,
+                    component: name,
                     version: version,
-                    type: res.value.type,
+                    type: type,
                     timestamp: Date.now()
                 }
 
-                console.log(newVersion);
                 open().save(newVersion, function (err, res) {
                     if (err) cb(err);
                     else cb(null, res);
