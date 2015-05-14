@@ -2,13 +2,14 @@
     var Connection = require('cradle').Connection;
     var NugetStore = require('./nugetdb');
     var DeployStore = require('./deploydb');
+    var RangeStore = require('./rangedb');
 
     var databases = {
         versions: 'versions',
         deploys: 'deploys'
     };
 
-    var base = { open: open, databases: databases, getVersion: getVersion }
+    var base = { open: open, databases: databases, getVersion: getVersion };
 
     function open (name) {
         return new Connection().database(name);
@@ -48,9 +49,18 @@
         }
     });
 
+    open(databases.deploys).save('_design/deploys', {
+        all: {
+            map: function (doc) {
+                if (doc.name) emit(doc.name, doc);
+            }
+        }
+    });
+
     module.exports = {
         nuget: new NugetStore(base),
-        deploy: new DeployStore(base)
+        deploy: new DeployStore(base),
+        range: new RangeStore(base)
     };
 
 }();

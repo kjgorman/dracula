@@ -15,7 +15,7 @@
 
                 cb(null, res);
             });
-    }
+    };
 
     module.exports = DeployStore;
 }();
