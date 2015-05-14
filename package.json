@@ -1,0 +1,19 @@
+{
+  "name": "dracula",
+  "version": "1.0.0",
+  "description": "numbers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/kjgorman/dracula.git"
+  },
+  "author": "kjgorman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kjgorman/dracula/issues"
+  },
+  "homepage": "https://github.com/kjgorman/dracula"
+}
