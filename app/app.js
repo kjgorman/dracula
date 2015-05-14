@@ -2,12 +2,14 @@
 
     var Nuget   = require('./numbering/nuget.js'),
         Deploy  = require('./numbering/deploy.js'),
+        Release = require('./numbering/release.js'),
         Range   = require('./query/range.js'),
         storage = require('./persistence/couch.js');
 
     function configure (server) {
         new Nuget(storage.nuget).route(server);
         new Deploy(storage.deploy).route(server);
+        new Release(storage.release).route(server);
         new Range(storage.range).route(server);
 
         server.route({

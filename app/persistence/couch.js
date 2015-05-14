@@ -2,11 +2,13 @@
     var Connection = require('cradle').Connection;
     var NugetStore = require('./nugetdb');
     var DeployStore = require('./deploydb');
+    var ReleaseStore = require('./releasedb');
     var RangeStore = require('./rangedb');
 
     var databases = {
         versions: 'versions',
-        deploys: 'deploys'
+        deploys: 'deploys',
+        releases: 'releases'
     };
 
     var base = { open: open, databases: databases, getVersion: getVersion };
@@ -30,6 +32,7 @@
 
     createIfNecessary(databases.versions, open(databases.versions));
     createIfNecessary(databases.deploys, open(databases.deploys));
+    createIfNecessary(databases.releases, open(databases.releases));
 
     function getVersion (name, cb) {
         open(databases.versions).view('versions/all', { key: name }, function (err, res) {
@@ -60,6 +63,7 @@
     module.exports = {
         nuget: new NugetStore(base),
         deploy: new DeployStore(base),
+        release: new ReleaseStore(base),
         range: new RangeStore(base)
     };
 
