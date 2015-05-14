@@ -25,7 +25,7 @@
     NugetStore.prototype.getVersion = function getVersion (name, cb) {
         this.base
             .open(this.base.databases.versions).view('versions/all', { key: name }, function (err, res) {
-                if (err) { cb(err) return; }
+                if (err) { cb(err); return; }
 
                 cb(null, res.sort(function (a, b) {
                     return a.value.timestamp < b.value.timestamp;
