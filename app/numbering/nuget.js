@@ -19,6 +19,10 @@
 	return version(current.major, current.minor, current.patch + 1);
     }
 
+    Nuget.prototype.addition = function (current) {
+	return version(current.major, current.minor+1, 0);
+    }
+
     Nuget.prototype.handler = function (request, reply) {
 	var componentName  = request.params.component,
 	    currentVersion = this.store(componentName),
