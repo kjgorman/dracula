@@ -52,7 +52,7 @@
 
     Nuget.prototype.revision = function (request, reply) {
 	var componentName  = request.params.component,
-	    fn             = (this[request.params.action] || id),
+	    fn             = (this[request.params.action] || function (x) { return x; }),
             store          = this.store;
 
 	store.get(componentName, function (err, res) {

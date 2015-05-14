@@ -1,6 +1,6 @@
 !function () {
 
-    function Release(store) {
+    function Deploy(store) {
         this.store = store;
 
         this.deploy = {
@@ -10,11 +10,11 @@
         };
     }
 
-    Release.prototype.route = function route(server) {
+    Deploy.prototype.route = function route(server) {
         server.route(this.deploy);
     };
 
-    Release.prototype.deployment = function deployment(request, reply) {
+    Deploy.prototype.deployment = function deployment(request, reply) {
         var component = request.params.component,
             hash = request.params.hash,
             store = this.store;
@@ -23,12 +23,11 @@
             if (err) { cb(err); return; }
 
             // TODO(kjgorman): also need dependencies here
-
-            store.release(component, hash, Date.now(), function (err, res) {
+            store.deploy(component, hash, Date.now(), function (err, res) {
                 reply(err || res);
             });
         });
     };
 
-    module.exports = Release;
+    module.exports = Deploy;
 }();

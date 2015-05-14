@@ -1,7 +1,12 @@
 !function () {
+    var databases = {
+        versions: 'versions',
+        deploys: 'deploys'
+    }
+
 
     var Connection = require('cradle').Connection,
-        db = open('versions');
+        db = open(databases.versions);
 
     function open (name) {
         return new Connection().database(name);
@@ -20,11 +25,11 @@
         });
     }
 
-    createIfNecessary('versions', db);
-    createIfNecessary('releases', open('releases'));
+    createIfNecessary(databases.versions, db);
+    createIfNecessary(databases.deploys, open(databases.deploys));
 
     function getVersion (name, cb) {
-        open('versions').view('versions/all', { key: name }, function (err, res) {
+        open(databases.versions).view('versions/all', { key: name }, function (err, res) {
             if (err) cb(err);
 
             cb(null, res.sort(function (a, b) {
@@ -43,17 +48,17 @@
                 timestamp: Date.now()
             };
 
-            open('versions').save(newVersion, function (err, res) {
+            open(databases.versions).save(newVersion, function (err, res) {
                 if (err) cb(err);
                 else cb(null, res);
             });
         }
     };
 
-    var releasePersistence = {
+    var deployPersistence = {
         get: getVersion,
-        release: function (name, hash, time, cb) {
-            open('releases').save({ name: name, hash: hash, time: time }, function (err, res) {
+        deploy: function (name, hash, time, cb) {
+            open(databases.deploys).save({ name: name, hash: hash, time: time }, function (err, res) {
                 if (err) { cb(err); return; }
 
                 cb(null, res);
@@ -71,7 +76,7 @@
 
     module.exports = {
         nuget: nugetPersistence,
-        release: releasePersistence
+        deploy: deployPersistence
     };
 
 }();
