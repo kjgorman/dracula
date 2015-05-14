@@ -5,13 +5,13 @@
 	this.revise = {
 	    method: 'POST',
 	    path: '/nuget/{component}/{action}',
-	    handler: this.revision
+	    handler: this.revision.bind(this)
 	};
 
 	this.create = {
 	    method: 'PUT',
 	    path: '/nuget/{component}/{major}/{minor}/{patch}',
-	    handler: this.creation
+	    handler: this.creation.bind(this)
 	};
     }
 
@@ -52,15 +52,20 @@
 
     Nuget.prototype.revision = function (request, reply) {
 	var componentName  = request.params.component,
-	    fn             = (this[request.params.action] || id);
+	    fn             = (this[request.params.action] || id),
+            store          = this.store;
 
-	this.store.get(componentName, function (err, res) {
+	store.get(componentName, function (err, res) {
 	    if (err) {
 		reply(err, null);
 		return;
 	    }
 
-	    reply(fn(res));
+            var next = fn(res.value.version)
+
+            store.set(componentName, next, function (err, res) {
+                reply(err || res);
+            });
 	})
     }
 
