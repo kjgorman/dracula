@@ -1,10 +1,11 @@
 !function () {
-    function DeployStore (base) {
+    function DeployStore (base, nugetdb) {
         this.base = base;
+        this.nuget = nugetdb;
     }
 
     DeployStore.prototype.get = function get () {
-        this.base.getVersion.apply(this, arguments);
+        this.nuget.getVersion.apply(this, arguments);
     };
 
     DeployStore.prototype.find = function find(component, version, cb) {

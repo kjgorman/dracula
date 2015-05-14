@@ -7,11 +7,11 @@
 
     var databases = {
         versions: 'versions',
-        deploys: 'deploys',
+        deploys : 'deploys',
         releases: 'releases'
     };
 
-    var base = { open: open, databases: databases, getVersion: getVersion };
+    var base = { open: open, databases: databases };
 
     function open (name) {
         return new Connection().database(name);
@@ -34,17 +34,6 @@
     createIfNecessary(databases.deploys, open(databases.deploys));
     createIfNecessary(databases.releases, open(databases.releases));
 
-    // todo(kjgorman): probably shouldn't live here anymore (move to nugetdb)
-    function getVersion (name, cb) {
-        open(databases.versions).view('versions/all', { key: name }, function (err, res) {
-            if (err) cb(err);
-
-            cb(null, res.sort(function (a, b) {
-                return a.value.timestamp < b.value.timestamp;
-            })[0]);
-        });
-    }
-
     open(databases.versions).save('_design/versions', {
         all: {
             map: function (doc) {
@@ -62,10 +51,10 @@
     });
 
     module.exports = {
-        nuget: new NugetStore(base),
-        deploy: new DeployStore(base),
+        nuget  : new NugetStore(base),
+        deploy : new DeployStore(base, new NugetStore(base)),
         release: new ReleaseStore(base),
-        range: new RangeStore(base)
+        range  : new RangeStore(base)
     };
 
 }();
