@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/kjgorman/dracula/issues"
   },
-  "homepage": "https://github.com/kjgorman/dracula"
+  "homepage": "https://github.com/kjgorman/dracula",
+  "dependencies": {
+    "chalk": "^1.0.0",
+    "hapi": "^8.4.0"
+  }
 }
