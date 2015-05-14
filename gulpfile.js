@@ -16,11 +16,11 @@ gulp.task('watch', function () {
     // re-run tests whenever we change a source file,
     // or test file
     gulp.watch(paths.tests, ['tests']);
-    gulp.watch(paths.src, ['tests']);
+    gulp.watch(paths.src, ['tests', 'lint']);
 });
 
 gulp.task('lint', function() {
-    return gulp.src('./app/**/*.js')
+    return gulp.src(paths.src)
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
