@@ -3,7 +3,7 @@
     var Nuget = require("./numbering/nuget.js")
 
     function configure (server) {
-	server.route(new Nuget().handler);
+	new Nuget().route(server);
 
 	server.route({
 	    method: 'GET',
