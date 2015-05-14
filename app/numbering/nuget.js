@@ -20,8 +20,8 @@
 	server.route(this.create);
     };
 
-    function id    (x) { return x; }
-    function succ  (x) { return x + 1; }
+    function id    (x) { return +x; }
+    function succ  (x) { return +x + 1; }
     function reset (x) { return 0; }
 
     function version (major, minor, patch) {
