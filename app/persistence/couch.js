@@ -34,6 +34,7 @@
     createIfNecessary(databases.deploys, open(databases.deploys));
     createIfNecessary(databases.releases, open(databases.releases));
 
+    // todo(kjgorman): probably shouldn't live here anymore (move to nugetdb)
     function getVersion (name, cb) {
         open(databases.versions).view('versions/all', { key: name }, function (err, res) {
             if (err) cb(err);

@@ -29,6 +29,11 @@
 
         function get (current, rest) {
             all(store, current, function (err, res) {
+                if (current == null) {
+                    cb(null, verified);
+                    return;
+                }
+
                 if (err) { cb(err); return; }
                 if (res == null) { cb('unable to find: ', current); return; }
 
@@ -41,11 +46,6 @@
 
                 verified.push(rev[0]);
 
-                if (rest.length === 0) {
-                    cb(null, verified);
-                    return;
-                }
-
                 get(rest.shift(), rest);
             });
         }
@@ -57,6 +57,8 @@
         var store = this.store;
 
         extract(request, store, function (err, deployables) {
+            if (err) { reply(err); return; }
+
             store.set({
                 label: request.params.label,
                 timestamp: Date.now(),

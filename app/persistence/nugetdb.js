@@ -17,10 +17,9 @@
             timestamp: Date.now()
         };
 
-        this.base.open(this.base.databases.versions).save(newVersion, function (err, res) {
-            if (err) cb(err);
-            else cb(null, res);
-        });
+        this.base
+            .open(this.base.databases.versions)
+            .save(newVersion, cb);
     };
 
     module.exports = NugetStore;
