@@ -81,7 +81,9 @@
 		return;
 	    }
 
-	    if (res != null) reply(new Error("cannot create an existing component"));
+	    if (res != null) {
+                reply(new Error("cannot create an existing component"));
+            }
 
 	    reply(this.store.set(componentName, version(major, minor, patch)));
 	});

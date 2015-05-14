@@ -15,7 +15,10 @@
     function storeWith(component, version) {
         return new Nuget({
             get: function (name, callback) {
-                return callback(null, name === component ? version : null);
+                return callback(null, name === component ? { value: { version: version } } : null);
+            },
+            set: function (name, version, callback) {
+                callback(null, version);
             }
         })
     }
