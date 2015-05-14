@@ -52,12 +52,16 @@
 
     Nuget.prototype.revision = function (request, reply) {
 	var componentName  = request.params.component,
-	    currentVersion = this.store.get(componentName),
-	    action         = request.params.action;
+	    fn             = (this[request.params.action] || id);
 
-	var fn = this[action] || id;
+	this.store.get(componentName, function (err, res) {
+	    if (err) {
+		reply(err, null);
+		return;
+	    }
 
-	reply(fn(currentVersion));
+	    reply(fn(res));
+	})
     }
 
     Nuget.prototype.creation = function (request, reply) {
@@ -66,11 +70,16 @@
 	    minor = request.params.minor,
 	    patch = request.params.patch;
 
-	if (this.store.get(componentName) != null) {
-	    throw new Error("cannot create an existing component");
-	}
+	this.store.get(componentName, function (err, res) {
+	    if (err) {
+		reply(err);
+		return;
+	    }
 
-	reply(this.store.set(componentName, version(major, minor, patch)));
+	    if (res != null) reply(new Error("cannot create an existing component"));
+
+	    reply(this.store.set(componentName, version(major, minor, patch)));
+	});
     }
 
     module.exports = Nuget;

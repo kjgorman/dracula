@@ -14,8 +14,8 @@
 
     function storeWith(component, version) {
 	return new Nuget({
-	    get: function (name) {
-		return name === component ? version : null;
+	    get: function (name, callback) {
+		return callback(null, name === component ? version : null);
 	    }
 	})
     }
@@ -134,9 +134,7 @@
 		params = { params: { component: 'foo', major: 1, minor: 0, patch: 0 }};
 
 	    nuget.creation(params, function (response) { assert(response != null); });
-	    assert.throws(function () {
-		nuget.creation(params, function () {});
-	    });
+	    nuget.creation(params, function (response) { assert.instanceOf(Error); });
 	});
     });
 
