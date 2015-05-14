@@ -3,31 +3,64 @@
     function Deploy(store) {
         this.store = store;
 
-        this.deploy = {
+        this.latest = {
             method: 'POST',
-            path: '/deploy/{component}/{hash}',
-            handler: this.deployment.bind(this)
+            path: '/deploy/{component}',
+            handler: this.latestVersion.bind(this)
+        };
+
+        this.specific = {
+            method: 'POST',
+            path: '/deploy/{component}/{major}/{minor}/{patch}',
+            handler: this.specificVersion.bind(this)
         };
     }
 
     Deploy.prototype.route = function route(server) {
-        server.route(this.deploy);
+        server.route(this.latest);
+        server.route(this.specific);
     };
 
-    Deploy.prototype.deployment = function deployment(request, reply) {
+    Deploy.prototype.specificVersion = function specificVersion (request, reply) {
         var component = request.params.component,
-            hash = request.params.hash,
+            major = +request.params.major,
+            minor = +request.params.minor,
+            patch = +request.params.patch,
+            store = this.store;
+
+        store.find(component, { major: major, minor: minor, patch: patch }, function (err, res) {
+            if (err) { reply(err); return; }
+            if (res == null) {
+                reply('couldn\'t find: ', major, minor, patch);
+                return;
+            }
+
+            deploy(store, res, reply, component);
+        });
+    };
+
+    Deploy.prototype.latestVersion = function latestVersion (request, reply) {
+        var component = request.params.component,
             store = this.store;
 
         store.get(component, function (err, res) {
-            if (err) { cb(err); return; }
+            if (err) { reply(err); return; }
 
-            // TODO(kjgorman): also need dependencies here
-            store.deploy(component, hash, Date.now(), function (err, res) {
-                reply(err || res);
-            });
+            deploy(store, res, reply, component);
         });
     };
+
+    function deploy (store, res, reply, component) {
+        if (res.value.type !== 'deployable') {
+            reply('cannot deploy something that is not <type:deployable>');
+            return;
+        }
+
+        // TODO(kjgorman): also need dependencies here
+        store.deploy(component, res.value.version, Date.now(), function (err, res) {
+            reply(err || res);
+        });
+    }
 
     module.exports = Deploy;
 }();
