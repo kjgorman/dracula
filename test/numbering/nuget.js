@@ -82,4 +82,26 @@
 	});
     });
 
+    describe('incrementing the major version', function () {
+	it ('should increment the major version by one when asked', function () {
+	    var nuget = storeWith('foo', version(1, 0, 0));
+
+	    nuget.handler({ params: {component: 'foo', action: 'breaking' }}, function (response) {
+		assert.equal(response.major, 2);
+		assert.equal(response.minor, 0);
+		assert.equal(response.patch, 0);
+	    });
+	});
+
+	it ('should zero the minor and patch versions when it bumps major', function () {
+	    var nuget = storeWith('foo', version(1, 2, 3));
+
+	    nuget.handler({ params: { component: 'foo', action: 'breaking' }}, function (response) {
+		assert.equal(response.major, 2);
+		assert.equal(response.minor, 0);
+		assert.equal(response.patch, 0);
+	    });
+	});
+    });
+
 }();

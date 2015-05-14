@@ -35,6 +35,10 @@
 	return transform(current)(id, succ, reset);
     }
 
+    Nuget.prototype.breaking = function (current) {
+	return transform(current)(succ, reset, reset);
+    }
+
     Nuget.prototype.handler = function (request, reply) {
 	var componentName  = request.params.component,
 	    currentVersion = this.store(componentName),
