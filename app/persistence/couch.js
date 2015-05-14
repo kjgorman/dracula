@@ -18,20 +18,16 @@
             });
         },
         set: function (name, type, version, cb) {
-            this.get(name, function (err, res) {
-                if (err) { cb(err); return; }
+            var newVersion = {
+                component: name,
+                version: version,
+                type: type,
+                timestamp: Date.now()
+            }
 
-                var newVersion = {
-                    component: name,
-                    version: version,
-                    type: type,
-                    timestamp: Date.now()
-                }
-
-                open().save(newVersion, function (err, res) {
-                    if (err) cb(err);
-                    else cb(null, res);
-                });
+            open().save(newVersion, function (err, res) {
+                if (err) cb(err);
+                else cb(null, res);
             });
         }
     }
