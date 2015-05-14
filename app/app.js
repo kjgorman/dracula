@@ -1,9 +1,9 @@
 !function () {
 
-    var nuget = require("./numbering/nuget.js")
+    var Nuget = require("./numbering/nuget.js")
 
     function configure (server) {
-	server.route(nuget);
+	server.route(new Nuget().handler);
 
 	server.route({
 	    method: 'GET',
